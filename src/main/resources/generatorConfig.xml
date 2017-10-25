@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry
+        location="C:\Users\Hai\.m2\repository\mysql\mysql-connector-java\5.1.6\mysql-connector-java-5.1.6.jar" />
+    <context id="context1" targetRuntime="MyBatis3">
+     	<property name="beginningDelimiter" value="`"/>
+    	<property name="endingDelimiter" value="`"/>
+        <commentGenerator>    
+            <property name="suppressDate" value="true"/>    
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->    
+            <property name="suppressAllComments" value="false"/>    
+        </commentGenerator> 
+        <!--数据库链接URL，用户名、密码 -->   
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://127.0.0.1:3306/testdb?useUnicode=true&amp;characterEncoding=UTF-8"
+            userId="resolution_user" password="qaqaqaqa" />
+            
+         <!-- 生成模型的包名和位置-->  
+        <javaModelGenerator targetPackage="league.model"
+            targetProject="resolution\src\main\java" />
+        <!-- 生成映射文件的包名和位置-->
+        <sqlMapGenerator targetPackage="league.mapping"
+            targetProject="resolution\src\main\resources" />
+        <!-- 生成DAO的包名和位置-->
+        <javaClientGenerator targetPackage="league.dao"
+            targetProject="resolution\src\main\java" type="XMLMAPPER" />
+            
+            
+        <table schema="testdb" tableName="user_t" ><generatedKey column="id" sqlStatement="MySql" identity="true" /> </table>
+        <table schema="testdb" tableName="device" ><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="transaction" ><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="trans_device" ><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="trans_location" ><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="group" delimitIdentifiers="true"><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="group_user"><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+        <table schema="testdb" tableName="history"><generatedKey column="id" sqlStatement="MySql" identity="true" /></table>
+    </context>
+</generatorConfiguration>

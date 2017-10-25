@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	
+    <definition name="main" extends="defaultTemplate">
+    <!-- 	<put-attribute name="title" expression="${title}"/>
+ 	    <put-attribute name="page_description" expression="${description}"/> -->
+    	<put-attribute name="body-id" value="details"/>
+    	<!-- <put-attribute name="content" value="/WEB-INF/jsp/main.jsp"/> -->
+ 		<put-attribute name="jquery_ui_css" value="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.min.css"/>
+<!--     	<put-attribute name="og_title" expression="my titles"/>
+ 	    <put-attribute name="og_desc" expression="my desc"/>
+ 	    <put-attribute name="og_image" expression="${urlOfImageToDisplay}"/> -->
+    </definition>
+    <definition name="login" extends="indexTemplate">
+    	<put-attribute name="content" value=""/>
+    </definition>
+
+</tiles-definitions>

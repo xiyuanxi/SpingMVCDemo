@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//src/main/resources/generatorConfig.xml=UTF-8
+encoding//src/main/resources/jdbc.properties=UTF-8
+encoding//src/main/resources/log4j.properties=UTF-8
+encoding//src/main/webapp/WEB-INF/template/defaultContent.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/template/defaultFooter.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/template/defaultHeader.jsp=UTF-8
+encoding//src/main/webapp/css/jtable.css=UTF-8
+encoding/src=UTF-8

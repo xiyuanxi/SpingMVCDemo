@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="league.dao.DeviceMapperA">
+  <resultMap id="BaseResultMap" type="league.model.Device">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="bb_guid" jdbcType="VARCHAR" property="bbGuid" />
+    <result column="fonts_code" jdbcType="VARCHAR" property="fontsCode" />
+    <result column="insert_date" jdbcType="TIMESTAMP" property="insertDate" />
+  </resultMap>
+   <resultMap id="BaseResultMap2" type="league.model.AssociatedDevicesInfo">
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="account_in_common" jdbcType="VARCHAR" property="accountsInCommon" />
+    <result column="associated_accounts" jdbcType="TIMESTAMP" property="associatedDevices" />
+    <result column="other_account" jdbcType="VARCHAR" property="otherAccounts" />
+    <result column="insert_date" jdbcType="TIMESTAMP" property="firstSeenDate" />
+  </resultMap>
+  <select id="selectDeviceListByTransactionAccountName_old" resultMap="BaseResultMap">
+    select distinct d.* from device d left join transaction t on t.device_id= d.id where t.account_name=#{account_name} and t.group_id=#{group_id}
+  </select>
+  <select id="selectDeviceListByTransactionAccountName" resultMap="BaseResultMap2">
+  select q.*, d.insert_date from (
+    select p.device_id, p.account_in_common,count(*) as associated_accounts,(count(*) - p.account_in_common) as other_account
+	from (
+		select s.*,t.account_name from (
+			SELECT o.device_id,count(o.account_name) as account_in_common  from
+			 (
+				SELECT distinct device_id, account_name FROM 
+				transaction WHERE account_name in 
+				 <foreach item="item" index="index" collection="account_names" open="(" separator="," close=")">  
+		  		#{item}  
+		 		</foreach> 
+				AND group_id=#{group_id}
+			  ) as o GROUP BY o.device_id
+		) s
+		left join transaction t on s.device_id=t.device_id group by s.device_id,s.account_in_common,t.account_name
+	) p group by p.device_id,p.account_in_common
+  ) as q left join device d on q.device_id=d.id
+  </select>
+</mapper>

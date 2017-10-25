@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="league.dao.TransactionDetailMapperA">
+  <resultMap id="BaseResultTMap" type="league.model.TransactionDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+    <result column="result" jdbcType="SMALLINT" property="result" />
+    <result column="rule_set_id" jdbcType="INTEGER" property="ruleSetId" />
+    <result column="rule_check_result" jdbcType="VARCHAR" property="ruleCheckResult" />
+    <result column="fns_code" jdbcType="VARCHAR" property="fnsCode" />
+    <result column="is_new_device" jdbcType="BIT" property="isNewDevice" />
+    <result column="insert_date" jdbcType="TIMESTAMP" property="insertDate" />
+    <association property="device" javaType="league.model.TransDevice">
+	    <id column="device_id" jdbcType="INTEGER" property="id"/>
+	    <result column="device_transaction_id" jdbcType="INTEGER" property="transactionId" />
+	    <result column="device_type" jdbcType="VARCHAR" property="deviceType" />
+	    <result column="browser_language" jdbcType="VARCHAR" property="browserLanguage" />
+	    <result column="browser_type" jdbcType="VARCHAR" property="browserType" />
+	    <result column="browser_version" jdbcType="VARCHAR" property="browserVersion" />
+	    <result column="flash_enabled" jdbcType="BIT" property="flashEnabled" />
+	    <result column="flash_version" jdbcType="VARCHAR" property="flashVersion" />
+	    <result column="flash_storage_enabled" jdbcType="BIT" property="flashStorageEnabled" />
+	    <result column="operation_system" jdbcType="VARCHAR" property="operationSystem" />
+	    <result column="screen_resolution" jdbcType="VARCHAR" property="screenResolution" />
+	    <result column="time_zone" jdbcType="VARCHAR" property="timeZone" />
+	    <result column="device_insert_date" jdbcType="TIMESTAMP" property="insertDate" />
+    </association>
+    <association property="location" javaType="league.model.TransLocation">
+        <id column="location_id" jdbcType="INTEGER" property="id" />
+	    <result column="location_transaction_id" jdbcType="INTEGER" property="transactionId" />
+	    <result column="ip" jdbcType="VARCHAR" property="ip" />
+	    <result column="country_id" jdbcType="VARCHAR" property="countryId" />
+	    <result column="city" jdbcType="VARCHAR" property="city" />
+	    <result column="isp" jdbcType="VARCHAR" property="isp" />
+	    <result column="location_insert_date" jdbcType="TIMESTAMP" property="insertDate" />
+    </association>
+  </resultMap>
+  <resultMap id="BaseResultTMap2" type="league.model.AssociatedDevicesInfo">
+	  <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+	  <result column="associated_accounts" jdbcType="INTEGER" property="associatedAccounts" />
+  </resultMap>
+  <resultMap id="BaseResultTMap3" type="league.model.AssociatedAccountsInfo">
+	  <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+	  <result column="device_in_common" jdbcType="INTEGER" property="deviceInCommon" />
+	  <result column="other_device" jdbcType="INTEGER" property="otherDevices" />
+	  <result column="associated_devices" jdbcType="INTEGER" property="associatedDevices" />
+  </resultMap>
+  <sql id="Example_Where_Clause_A">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+   <sql id="Base_Column_List_Device">
+    d.id as device_id, d.transaction_id as device_transaction_id, device_type, browser_language, browser_type, browser_version, 
+    flash_enabled, flash_version, flash_storage_enabled, operation_system, screen_resolution, 
+    time_zone, d.insert_date as device_insert_date
+  </sql>
+  <sql id="Base_Column_List_Location">
+    l.id as location_id, l.transaction_id as location_transaction_id, ip, country_id, city, isp, l.insert_date as location_insert_date
+  </sql>
+  <select id="selectDetailList" parameterType="java.lang.Integer" resultMap="BaseResultTMap">
+    select 
+    t.*, 
+    <include refid="Base_Column_List_Device" />,
+    <include refid="Base_Column_List_Location" />
+	from transaction t
+	left join trans_device d on t.id=d.transaction_id
+	left join trans_location l on t.id=l.transaction_id
+	<if test="_parameter != null">
+      <include refid="Example_Where_Clause_A" />
+    </if>
+	<if test="example.orderByClause != null">
+		order by ${example.orderByClause}
+    </if>
+     LIMIT #{offset},#{limit}
+  </select>
+  <select id="selectDetailListCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) 
+ 	from ( select t.id from transaction t
+	left join trans_device d on t.id=d.transaction_id
+	left join trans_location l on t.id=l.transaction_id
+	<if test="_parameter != null">
+      <include refid="Example_Where_Clause_A" />
+    </if>
+    LIMIT #{maxCount}) as t
+  </select>
+  
+  <select id="selectAssociatedAccountsByAccountName"  resultMap="BaseResultTMap2">
+	  SELECT device_id,count(distinct(account_name)) as associated_accounts
+	  FROM testdb.transaction 
+	  WHERE device_id 
+	  IN (SELECT distinct(device_id) FROM transaction WHERE account_name=#{account_name} AND group_id=#{group_id}) GROUP BY device_id
+  </select>
+  
+  <select id="selectAllAssociatedAccountsByDeviceIds"  resultMap="BaseResultTMap3">
+	select p.account_name, p.device_in_common,count(*) as associated_devices,(count(*) - p.device_in_common) as other_device
+	from (
+		select s.*,t.device_id from (select o.account_name, count(o.device_id) as device_in_common
+		from
+		( 
+			select distinct account_name, device_id from transaction where device_id in 
+		  	 <foreach item="item" index="index" collection="device_ids" open="(" separator="," close=")">  
+		  		#{item}  
+		 	</foreach> 
+	 		and group_id=#{group_id}
+		) as o group by o.account_name
+	) s 
+	left join transaction t on s.account_name=t.account_name group by s.account_name,s.device_in_common,t.device_id
+	) p group by p.account_name,p.device_in_common
+  </select>
+</mapper>
