@@ -3,12 +3,12 @@ Demo of SpringMVC web. Using JSP, Tiles, JQuery, AJAX, JTable, Maven, SpringMVC,
 <div>
  <br>
 Screen Capture 1:
-  <a href="">
+  <a href="https://github.com/xiyuanxi/SpingMVCDemo/blob/master/screen1.JPG?raw=true">
     <img src="https://github.com/xiyuanxi/SpingMVCDemo/blob/master/screen1.JPG?raw=true" alt="image1" width="1400"/>
      </a>
   <br><br>
   Screen Capture 2:
-  <a href="">
+  <a href="https://github.com/xiyuanxi/SpingMVCDemo/blob/master/screen2.JPG?raw=true">
   <img src="https://github.com/xiyuanxi/SpingMVCDemo/blob/master/screen2.JPG?raw=true" alt="image2" width="1400"/>
  </a>
 </div>
